@@ -1,0 +1,96 @@
+{% load i18n %}
+
+{% if app_list %}
+  {% for app in app_list %}
+    <div class="app-{{ app.app_label }} module{% if app.app_url in request.path %} current-app{% endif %}">
+      <table>
+        <caption>
+          <a href="{{ app.app_url }}" class="section" title="{% blocktranslate with name=app.name %}Models in the {{ name }} application{% endblocktranslate %}">{{ app.name }}</a>
+        </caption>
+        {% for model in app.models %}
+          <tr class="model-{{ model.object_name|lower }}{% if model.admin_url in request.path %} current-model{% endif %}">
+            {% if model.admin_url %}
+              <th scope="row"><a href="{{ model.admin_url }}"{% if model.admin_url in request.path %} aria-current="page"{% endif %}>{{ model.name }}</a></th>
+            {% else %}
+              <th scope="row">{{ model.name }}</th>
+            {% endif %}
+
+            {% if model.add_url %}
+              <td><a href="{{ model.add_url }}" class="addlink">{% translate 'Add' %}</a></td>
+            {% else %}
+              <td></td>
+            {% endif %}
+
+            {% if model.admin_url and show_changelinks %}
+              {% if model.view_only %}
+                <td><a href="{{ model.admin_url }}" class="viewlink">{% translate 'View' %}</a></td>
+              {% else %}
+                <td><a href="{{ model.admin_url }}" class="changelink">{% translate 'Change' %}</a></td>
+              {% endif %}
+            {% elif show_changelinks %}
+              <td></td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+        {% if app.name == 'Whyness_Timesheet' %}
+          <tr class="model-timesheets">
+              <td><a href="/admin/timesheets/" class="viewlink">Timesheets</a></td>
+          </tr>
+        {% endif %}
+        {% if app.name == 'Whyness_Crm' %}
+          <tr class="model-crm">
+              <td><a href="/admin/crm/" class="viewlink">Dashboard</a></td>
+          </tr>
+          <tr class="model-crm">
+              <td><a href="/admin/crm/app-aggregate/"
+              class="viewlink">App aggregate</a></td>
+          </tr>
+          <tr class="model-crm">
+              <td><a href="/admin/crm/user-status/"
+              class="viewlink">User status</a></td>
+          </tr>
+          <tr class="model-crm">
+              <td><a href="/admin/crm/user-stories/"
+              class="viewlink">User stories</a></td>
+          </tr>
+          <tr class="model-crm">
+              <td><a href="/admin/crm/user-stories-week/"
+              class="viewlink">User stories/week</a></td>
+          </tr>
+          <tr class="model-crm">
+              <td><a href="/admin/crm/user-transcript-readers-week/"
+              class="viewlink">User transcript readers per week</a></td>
+          </tr>
+          <tr class="model-crm">
+              <td><a href="/admin/crm/user-ai/"
+              class="viewlink">User AI analysis</a></td>
+          </tr>
+          <tr class="model-crm">
+              <td><a href="/admin/crm/trackers/"
+              class="viewlink">Trackers</a></td>
+          </tr>
+        {% endif %}
+        {% if app.name == 'Whyness_Userfeedback' %}
+          <tr class="model-userfeedback">
+              <td><a href="/user/feedback/values/"
+              class="viewlink">Values</a></td>
+          </tr>
+          <tr class="model-userfeedback">
+              <td><a href="/user/feedback/strengths/"
+              class="viewlink">Strengths</a></td>
+          </tr>
+          <tr class="model-userfeedback">
+              <td><a href="/user/feedback/impacts/"
+              class="viewlink">Impacts</a></td>
+          </tr>
+          <tr class="model-userfeedback">
+              <td><a href="/user/feedback/summary/"
+              class="viewlink">Summary</a></td>
+          </tr>
+        {% endif %}
+      </table>
+    </div>
+  {% endfor %}
+{% else %}
+  <p>{% translate 'You don’t have permission to view or edit anything.' %}</p>
+{% endif %}

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block main %}
+<table>
+<tr>
+<th>id</th>
+<th>Name</th>
+<th>Email</th>
+</tr>
+{% for prospect in prospects %}
+<tr>
+<td>{{ prospect.id }}</td>
+<td>{{ prospect.name }}</td>
+<td>{{ prospect.email }}</td>
+</tr>
+{% endfor %}
+</table>
+{% endblock %}
+

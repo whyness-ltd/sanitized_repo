@@ -1,0 +1,292 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block title %}Whyness CRM | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+&rsaquo; <a href="/admin/whyness_crm/">Whyness CRM</a>
+&rsaquo; Dashboard
+</div>
+{% endblock %}
+
+{% block extrahead %}
+<link rel="stylesheet" type="text/css" href="/static/admin/css/forms.css">
+<script type="text/javascript">
+    window.onload = function() {
+        document.forms['crm_dashboard'].addEventListener('change', function() {
+            let form = document.forms['crm_dashboard'];
+            let dataset_go = false;
+            let message_go = false;
+            let tracker_go = false;
+            let url_go = '';
+            if (form.elements.namedItem('datasets').value) {
+              dataset_go = form.elements.namedItem('datasets').value;
+            }
+            if (form.elements.namedItem('messages').value) {
+              message_go = form.elements.namedItem('messages').value;
+            }
+
+            if (dataset_go && message_go) {
+                url_go = "/admin/crm/" + dataset_go + "/" + message_go + "/";
+            } else if (dataset_go) {
+                url_go = "/admin/crm/" + dataset_go + "/";
+            } else {
+                url_go = "/admin/crm/";
+            }
+            form.action=url_go;
+            this.submit();
+        }, true);
+    };
+</script>
+<link rel="stylesheet" type="text/css" href="/static/admin/css/changelists.css">
+{% endblock %}
+
+{% block content %}
+<h1 class="">Whyness CRM Dashboard</h1>
+<div id="changelist" class="aligned">
+<form method="POST" name="crm_dashboard" action="{% url 'whyness_crm:dashboard' dataset_id message_id %}">
+
+<div class="form-row field-dataset">
+    <div>
+        <label for="id_datasets">Dataset:</label>
+        <select name="datasets">
+            <option value="0">Choose dataset</option>
+            {% for data in datasets %}<option value="{{ data.id }}"
+            {% if dataset_id == data.id %}selected="selected"{% endif %}
+            >{{ data.title }}</option>{% endfor %}
+        </select>
+    </div>
+{% if dataset %}
+<div class="aligned">
+    <div class="help">{{ dataset.description|safe }}</div>
+</div>
+{% endif %}
+</div>
+
+<div class="form-row field-dataset">
+    <div>
+        <label for="id_datasets">Test message:</label>
+        <select name="filter-messages">
+            <option value="0">Choose message</option>
+        {% for data in crm_messages %}
+            <option value="{{ data.id }}"
+            {% if data.id == filter_message.id %}selected="selected"{% endif %}
+            >{{ data.title }}</option>
+        {% endfor %}
+        </select>
+    </div>
+{% if filter_message %}
+<div class="aligned">
+    <div class="help">{{ filter_message.description|safe }}
+    </div>
+</div>
+{% endif %}
+
+</div>
+
+{% if filter_message.id %}
+<div class="form-row">
+    <label class="form-check-label" for="messages-filter-all">
+        Everyone
+        <input
+            name="filter-messages-type"
+            class="form-check-input"
+            type="radio"
+            value="all"
+            id="filter-messages-type-all"
+            {% if messages_filter_type == 'all' %}checked=checked{% endif %}
+        >
+    </label>
+    <label class="form-check-label" for="messages-filter-messaged">
+        Only those who have received this message
+        <input
+            name="filter-messages-type"
+            class="form-check-input"
+            type="radio"
+            value="messaged"
+            id="filter-messages-type-messaged"
+            {% if messages_filter_type == 'messaged' %}checked=checked{% endif %}
+        >
+    </label>
+    <label class="form-check-label" for="messages-filter-unmessaged">
+        Only those who have not received this message
+        <input
+            name="filter-messages-type"
+            class="form-check-input"
+            type="radio"
+            value="unmessaged"
+            id="filter-messages-type-unmessaged"
+            {% if messages_filter_type == 'unmessaged' %}checked=checked{% endif %}
+        >
+    </label>
+</div>
+{% endif %}
+
+
+
+<div class="form-row field-dataset">
+    <div>
+        <label for="id_datasets">Tracker to test:</label>
+        <select name="filter-trackers">
+            <option value="0">Choose Tracker</option>
+            {% for data in trackers %}
+            <option value="{{ data.id }}"
+            {% if filter_tracker.id == data.id %}selected="selected"{% endif %}
+            >{{ data.title }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+{% if tracker_filter %}
+<div class="aligned">
+    <div class="help">{{ filter_tracker.description|safe }}
+    </div>
+</div>
+{% endif %}
+{% if filter_tracker %}
+<div class="form-row">
+    <div>
+        <label class="form-check-label" for="trackers-filter-all">
+            Everyone
+        <input
+            name="trackers-filter-type"
+            class="form-check-input"
+            type="radio"
+            value="all"
+            id="trackers-filter-all"
+            {% if trackers_filter_type == 'all' %}checked=checked{% endif %}
+        >
+        </label>
+        <label class="form-check-label" for="trackers-filter-tracked">
+            Only those who have activated this tracker
+        <input
+            name="trackers-filter-type"
+            class="form-check-input"
+            type="radio"
+            value="tracked"
+            id="trackers-filter-tracked"
+            {% if trackers_filter_type == 'tracked' %}checked=checked{% endif %}
+        >
+        </label>
+        <label class="form-check-label" for="trackers-filter-untracked">
+            Only those who have not activated this tracker
+        <input
+            name="trackers-filter-type"
+            class="form-check-input"
+            type="radio"
+            value="untracked"
+            id="trackers-filter-untracked"
+            {% if trackers_filter_type == 'untracked' %}checked=checked{% endif %}
+        >
+        </label>
+    </div>
+</div>
+{% endif %}
+
+
+
+
+<div class="form-row field-dataset">
+    <div>
+        <label for="id_datasets">Message to send:</label>
+        <select name="messages">
+            <option value="0">Choose message to send</option>
+        {% for data in crm_messages %}
+            <option value="{{ data.id }}"
+            {% if message.id == data.id %}selected="selected"{% endif %}
+            >{{ data.title }}</option>
+        {% endfor %}
+        </select>
+    </div>
+</div>
+{% if filter_message %}
+<div class="aligned">
+    <div class="help">{{ message.description|safe }}</div>
+</div>
+{% endif %}
+
+{% if dataset_id %}
+<div class="submit-row">
+<button name="sendtome" class="button" type="submit" value="sendtome">Send to me</button>
+<button name="sendtoall" class="button" type="submit" value="sendtoall">Send to all</button>
+</div>
+{% endif %}
+{% csrf_token %}
+</form>
+</div>
+<hr />
+
+<table>
+<thead>
+<tr>
+{% if dataset_id %}
+    <th>{{ dataset.title }}:
+    {% if dataset.contact_type == 1 %}{{ contacts_count }}
+    {% elif dataset.contact_type == 2 %}{{ users_count }}
+    {% endif %}
+    </th>
+{% else %}
+    <th>Prospective users: {{ contacts_count }}</th>
+    <th>Current users: {{ users_count }}</th>
+{% endif %}
+</tr>
+</thead>
+</table>
+
+<table>
+{% if dataset_id %}
+<thead>
+{% for column in custom_columns %}
+<th>{{ column }}</th>
+{% endfor %}
+</thead>
+{% else %}
+<thead>
+<th>Data</th>
+</thead>
+{% endif %}
+
+{% if dataset_id %}
+<tbody>
+{% for data in custom_result %}
+<tr>
+    {% for d in data %}
+    <td>{{ d }}</td>
+    {% endfor %}
+</tr>
+{% endfor %}
+{% endif %}
+
+<tr>
+{% if not dataset_id %}
+    <td>
+    {% for contact in contacts %}
+        {% if contact.name %}
+<div>{{ contact.name }} &lt;{{ contact.email }}&gt;</div>
+        {% else %}
+<div>{{ contact.email }}</div>
+        {% endif %}
+    {% endfor %}
+    </td>
+    <td>
+    {% for user in users %}
+        {% if user.name %}
+<div>{{ user.name }} &lt;{{ user.email }}&gt;</div>
+        {% else %}
+<div>{{ user.email }}</div>
+        {% endif %}
+    {% endfor %}
+    </td>
+{% endif %}
+</tr>
+</tbody>
+</table>
+{% if contacts_count >= 50 %}
+<p>Only the first {{ limit }} are shown</p>
+{% elif users_count >= 50 %}
+<p>Only the first {{ limit }} are shown</p>
+{% endif %}
+
+{% endblock %}

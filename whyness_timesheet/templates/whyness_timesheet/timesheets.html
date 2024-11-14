@@ -1,0 +1,51 @@
+{% extends "admin/base_site.html" %}
+{% load static i18n %}
+
+{% block title %}Timesheets| {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+&rsaquo; <a href="/admin/whyness_timesheet/">Whyness_Timesheet</a>
+&rsaquo; Timesheets
+</div>
+{% endblock %}
+
+{% block content %}
+<table><tr>
+    <td><a href="{% url 'timesheets-csv' %}">Download csv</a></td>
+    <td><a href="{% url 'timesheets-detail-csv' %}">Download detail csv</a></td>
+</tr></table>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Total</th>
+<th>Recruitment</th>
+<th>User research and testing</th>
+<th>Market / Customer Research &amp; Engagement, &amp; Strategy</th>
+<th>Solution Design and Development</th>
+<th>Product development</th>
+<th>Strategy</th>
+<th>Annual leave</th>
+<th>Bank Holidays</th>
+<th>Sick leave</th>
+</tr>
+</thead>
+{% for timesheet in timesheets %}
+<tr>
+<td>{{ timesheet.date|date:'Y-m-d' }}</td>
+<td>{{ timesheet.gtotal }}</td>
+<td>{{ timesheet.hr_recruitment__sum }}</td>
+<td>{{ timesheet.user_research__sum }}</td>
+<td>{{ timesheet.comms_marketing__sum }}</td>
+<td>{{ timesheet.design_architecture__sum }}</td>
+<td>{{ timesheet.product_development__sum }}</td>
+<td>{{ timesheet.strategy__sum }}</td>
+<td>{{ timesheet.annual_leave__sum }}</td>
+<td>{{ timesheet.statutory_holiday__sum }}</td>
+<td>{{ timesheet.sick_leave__sum }}</td>
+</tr>
+{% endfor %}
+</table>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block title %}Whyness User Feedback - Values| {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+&rsaquo; <a href="/admin/whyness_userfeedback/">User Feedback</a>
+&rsaquo; User Feedback - Values
+</div>
+{% endblock %}
+
+{% block content %}
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Total</th>
+</tr>
+</thead>
+<tbody>
+{% for value in values %}
+<tr>
+<td>{{ value.value }}</td>
+<td>{{ value.value_count }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+{% endblock %}
+

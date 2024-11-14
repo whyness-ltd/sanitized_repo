@@ -1,0 +1,56 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block title %}Whyness CRM | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block extrahead %}
+<style>
+.text-success {
+  color: #198754;
+}
+.text-danger {
+  color: #dc3545;
+}
+</style>
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+&rsaquo; <a href="/admin/whyness_crm/">Whyness CRM</a>
+&rsaquo; User stories / week
+</div>
+{% endblock %}
+
+{% block content %}
+<h1 class="">Whyness CRM Registered app user stories</h1>
+<table>
+<thead>
+<tr>
+    <th>Week - 4</th>
+    <th>Week - 3</th>
+    <th>Week - 2</th>
+    <th>Week - 1</th>
+</tr>
+<thead>
+<tbody>
+{% for data in custom_result %}
+</tr>
+<tr>
+    <td>{{ data.0 }}</td>
+    <td>{{ data.1 }}</td>
+    <td>{{ data.2 }}</td>
+    <td>{{ data.3 }}</td>
+</tr>
+{% empty %}
+<tr>
+    <td>&mdash;</td>
+    <td>&mdash;</td>
+    <td>&mdash;</td>
+    <td>&mdash;</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+
+{% endblock %}

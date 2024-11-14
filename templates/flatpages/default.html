@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block meta_title %}{{ flatpage.title }}{% endblock %}
+{% block og_title %}{{ flatpage.title }}{% endblock %}
+
+{% block main %}
+<h1>{% if flatpage.title != 'home' %}{{ flatpage.title }}{% endif %}</h1>
+{{ flatpage.content|safe }}
+{% endblock %}

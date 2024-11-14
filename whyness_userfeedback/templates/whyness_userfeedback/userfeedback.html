@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block menu %}
+{% endblock %}
+
+{% block extra_head %}
+<style>
+form li {
+    list-style-type: none;
+}
+li {
+    height: 3em;
+}
+li label {
+    width: 250px;
+}
+li span.helptext {
+    display: block;
+    padding-left: 150px;
+}
+</style>
+{% endblock %}
+
+{% block main %}
+{% if request.method == 'POST' %}
+<p>You have submitted feedback for:
+{% if user.name %}{{ user.name }}
+{% else %}{{ user.email }}
+{% endif %}</p>
+<div>{{ feedback_thankyou.content|safe }}</div>
+{% else %}
+<div>{{ feedback_intro.content|safe }}</div>
+<p>This is feedback for:
+{% if user.name %}{{ user.name }}
+{% else %}{{ user.email }}
+{% endif %}</p>
+
+<form
+    enctype="multipart/form-data"
+    method="post"
+    action='{% url "whyness_userfeedback:user-feedback" user.xref %}'
+>
+{{ form.as_ul }}
+{% csrf_token %}
+<button
+    type="submit"
+    class="btn btn-primary mb-3"
+    style="margin-left:253px;"
+    value="Submit">Submit feedback for
+{% if user.name %}{{ user.name }}
+{% else %}{{ user.email }}
+{% endif %}
+</button>
+</form>
+
+{% endif %}
+
+{% endblock %}

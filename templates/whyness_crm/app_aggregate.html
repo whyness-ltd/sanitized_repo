@@ -1,0 +1,42 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block title %}Whyness CRM | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+&rsaquo; <a href="/admin/whyness_crm/">Whyness CRM</a>
+&rsaquo; App Aggregate
+</div>
+{% endblock %}
+
+{% block content %}
+<h1 class="">Whyness CRM App Aggregate</h1>
+
+<table>
+{% if dataset_id %}
+<thead>
+{% for column in custom_columns %}
+<th>{{ column }}</th>
+{% endfor %}
+</thead>
+{% else %}
+<thead>
+<th>Item</th>
+<th>Quantity</th>
+</thead>
+{% endif %}
+
+<tbody>
+{% for data in custom_result %}
+<tr>
+    {% for d in data %}
+    <td>{{ d }}</td>
+    {% endfor %}
+</tr>
+{% endfor %}
+</tbody>
+</table>
+
+{% endblock %}

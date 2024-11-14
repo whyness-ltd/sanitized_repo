@@ -1,0 +1,35 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block title %}Whyness CRM | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+&rsaquo; <a href="/admin/whyness_crm/">Whyness CRM</a>
+&rsaquo; Trackers
+</div>
+{% endblock %}
+
+{% block content %}
+<h1 class="">Whyness CRM trackers</h1>
+<table>
+<thead>
+<tr><th>Title</th><th>URL</th></tr>
+</thead>
+
+<tbody>
+{% for data in trackers %}
+<tr>
+    <td><a href="{% url 'whyness_crm:tracker_item' data.id %}">{{ data.title }}</a></td>
+    <td>{{ data.url }}</td>
+</tr>
+{% endfor %}
+
+</tbody>
+</table>
+{% if trackers >= 50 %}
+<p>Only the first {{ limit }} are shown</p>
+{% endif %}
+
+{% endblock %}

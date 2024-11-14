@@ -1,0 +1,55 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block title %}Whyness CRM | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+&rsaquo; <a href="/admin/whyness_crm/">Whyness CRM</a>
+&rsaquo; Tracker
+</div>
+{% endblock %}
+
+{% block content %}
+<h1 class="">Whyness CRM trackers</h1>
+<table>
+<tbody>
+<tr>
+    <th>Title</th>
+    <td>{{ tracker.title }}</td>
+</tr>
+<tr>
+    <th>URL</th>
+    <td><a href="{{ tracker.url }}">{{ tracker.url }}</a></td>
+</tr>
+</tbody>
+</table>
+
+<table>
+<tr>
+    <th>Registered users</th>
+    <th>Prospects</th>
+</tr>
+<tr><td>
+<table>
+{% for data in authuser_trackers %}
+<tr><td>{{ data.contact }}</td><td>{{ data.create_date }}</td></tr>
+{% endfor %}
+</table>
+</td><td>
+<table>
+{% for data in contact_trackers %}
+<tr><td>{{ data.contact }}</td><td>{{ data.create_date }}</td></tr>
+{% endfor %}
+</table>
+</td></tr>
+</table>
+
+{% if authuser_trackers >= 50 %}
+<p>Only the first {{ limit }} are shown</p>
+{% elif contact_trackers >= 50 %}
+<p>Only the first {{ limit }} are shown</p>
+{% endif %}
+
+{% endblock %}
